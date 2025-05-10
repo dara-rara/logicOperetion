@@ -22,11 +22,11 @@ from appLogicModel.views import IndexView, SessionStartView, LevelsView, Results
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', IndexView.as_view(), name='index'),  # Исправлено: добавлены скобки ()
-    path('session_start/', SessionStartView.as_view(), name='session_start'),  # Исправлено
-    path('levels/', LevelsView.as_view(), name='levels'),  # Исправлено
-    path('results/', ResultsView.as_view(), name='results_view'),  # Исправлено
-    path('instructions/', InstructionsView.as_view(), name='instructions'),  # Исправлено
+    path('', IndexView.as_view(), name='index'),
+    path('session_start/', SessionStartView.as_view(), name='session_start'),
+    path('levels/', LevelsView.as_view(), name='levels'),
+    path('results/', ResultsView.as_view(), name='results_view'),
+    path('instructions/', InstructionsView.as_view(), name='instructions'),
     path('next_run/', next_run, name='next_run'),
     path('save_comment/', save_comment, name='save_comment'),
     path('download_report/', download_session_report, name='download_report'),

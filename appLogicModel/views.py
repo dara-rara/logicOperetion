@@ -269,14 +269,9 @@ class LevelsView(View):
 
             return {
                 'is_correct': correct_count == len(detailed_results),
-                'correct_count': correct_count,
                 'total_count': len(detailed_results),
                 'details': detailed_results,
                 'correct_answer': correct_answer,
-                'level_info': {
-                    'level_num': level_data.get('level', 0),
-                    'operations': [item.get('bits', '') for item in level_data.get('data', [])]
-                }
             }
 
         except Exception as e:
@@ -292,12 +287,10 @@ class LevelsView(View):
             'run_number': int(request.session['run_number']),
             'is_correct': results['is_correct'],
             'final_evaluation': request.session['final_evaluation'],
-            'correct_count': results['correct_count'],
             'total_count': results['total_count'],
             'details': results['details'],
             'user_answer': user_answer,
             'correct_answer': " ".join(results['correct_answer']),
-            'level_info': results['level_info'],
             'timestamp': datetime.now().isoformat(sep=' ', timespec='seconds'),
             'level_data': {  # Сохраняем ключевые данные уровня для отладки
                 'level': level_data.get('level'),
