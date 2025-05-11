@@ -3,16 +3,16 @@ funcs_dict = {
     1: lambda x, y: x & y,
     2: lambda x, y: x ^ y,
     3: lambda x, y: x == y,
-    4: lambda x, y: ~x | y,
-    5: lambda x, y: ~(x | y),
-    6: lambda x, y: ~(x & y),
-    7: lambda x, y: ~(~x | y),
-    8: lambda x, y: ~x,
+    4: lambda x, y: bit_not(x) | y,
+    5: lambda x, y: bit_not(x | y),
+    6: lambda x, y: bit_not(x & y),
+    7: lambda x, y: bit_not(bit_not(x) | y),
+    8: lambda x, y: bit_not(x),
     9: lambda x, y: x,
     10: lambda x, y: y,
-    11: lambda x, y: x | ~y,
-    12: lambda x, y: ~(x | ~y),
-    13: lambda x, y: ~y,
+    11: lambda x, y: x | bit_not(y),
+    12: lambda x, y: bit_not(x | bit_not(y)),
+    13: lambda x, y: bit_not(y),
 }
 
 func_symbols = {
@@ -41,8 +41,8 @@ def apply_binary_func(func_num: int, numbers: list[int]):
     res = numbers[0]
     for i in numbers[1:]:
         res = funcs_dict[func_num](res, i)
-        if res < 0:
-            res = abs(res) - 1
+        # if res < 0:
+        #     res = abs(res) - 1
     return int(res)
 
 
@@ -62,3 +62,9 @@ def decimal_to_base_int(number: int, base: int) -> int:
 
     result = int(''.join(digits[::-1]))
     return -result if number < 0 else result
+
+
+def bit_not(num):
+    if num == 0: return 1
+    return num ^ ((1 << num.bit_length()) - 1)
+
