@@ -2,7 +2,7 @@ funcs_dict = {
     0: lambda x, y: x | y,
     1: lambda x, y: x & y,
     2: lambda x, y: x ^ y,
-    3: lambda x, y: x == y,
+    3: lambda x, y, l: bit_equal(x, y, l),
     4: lambda x, y, l: bit_not(x, l) | y,
     5: lambda x, y, l: bit_not((x | y), l),
     6: lambda x, y, l: bit_not((x & y), l),
@@ -39,7 +39,7 @@ def convert_to_decimal(x: int, y: int):
 
 def apply_binary_func(func_num: int, numbers: list[int]):
     res = numbers[0]
-    if func_num in [4, 5, 6, 7, 8, 11, 12, 13]:
+    if func_num in [3, 4, 5, 6, 7, 8, 11, 12,13]:
         m = max(numbers)
         l = m.bit_length()
         for i in numbers[1:]:
@@ -76,3 +76,16 @@ def decimal_to_base_int(number: int, base: int) -> int:
 def bit_not(num, l):
     if num == 0: return (1 << l) - 1
     return num ^ ((1 << l) - 1)
+
+
+def bit_equal(a, b, l):
+    result = 0
+    for i in range(l):
+        mask = 1 << i
+        bit_a = (a & mask) != 0
+        bit_b = (b & mask) != 0
+        equal = bit_a == bit_b
+
+        if equal:
+            result |= (1 << i)
+    return result
