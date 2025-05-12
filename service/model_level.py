@@ -15,7 +15,11 @@ def generate_level(level_num: int, previous_numbers: list[int] = None, kbase: li
     if level_num == 0:
         l0 = 10
         k0 = generate_random_numbers(l0, 2, 10)  # системы счисления от 2 до 10
-        y0 = [generate_random_numbers(l0, upper_bound=k0[i] - 1)[0] for i in range(l0)]
+        y0 = []
+        for i in range(l0):
+            upper = min(k0[i] - 1, 7)
+            num = generate_random_numbers(1, upper_bound=upper)[0]
+            y0.append(num)
         decimal_to_base = [decimal_to_base_int(y0[i], k0[i]) for i in range(l0)]
 
         return {
