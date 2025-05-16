@@ -429,8 +429,26 @@ class ReferenceModelView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         levels_data = build_model()
-        context['levels'] = levels_data
 
+        # Подготавливаем данные: добавляем аргументы в битовом виде и функцию-символ
+        for level in levels_data:
+            if level["level"] == 0:
+                level["y_k"] = [f"{y}_{k}" for y, k in zip(level["y"], level["k"])]
+            else:
+                level["display_rows"] = []
+                for i in range(level["l"]):
+                    arg_indices = level["args_ind"][i]
+                    args_binary = [level["args_binary"][j] for j in arg_indices]
+                    func_symbol = func_symbols[level["funcs"][i]]
+                    result = level["results"][i]
+                    level["display_rows"].append({
+                        "args": args_binary,
+                        "func": func_symbol,
+                        "result": result,
+                        "model_result": result,
+                        "matched": True,
+                    })
+
+        context["levels"] = levels_data
         return context

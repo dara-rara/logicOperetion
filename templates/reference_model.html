@@ -98,6 +98,21 @@
             background-color: var(--primary-color);
             color: white;
         }
+
+        .level-block {
+            margin-bottom: 20px;
+            padding: 30px;
+            border-radius: 10px;
+            border: none;
+            border: 2px solid #999;
+            transition: transform 0.3s;
+        }
+
+        .operation {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -134,27 +149,31 @@
             <div class="col-lg-8">
                 <div class="card card-custom mb-4">
                     <div class="card-header card-header-custom text-center">
-                        <h3><i class="fas fa-home me-2"></i>Добро пожаловать</h3>
+                        <h3>Эталонная модель</h3>
                     </div>
                     <div class="card-body">
                         {% for level in levels %}
                             <div class="level-block">
-                                <h3>Уровень {{ level.level }}</h3>
-                                <p><strong>Количество чисел (l):</strong> {{ level.l }}</p>
-                                <p><strong>Системы счисления:</strong> {{ level.k }}</p>
+                                <h4>Уровень {{ level.level }}</h4>
 
                                 {% if level.level == 0 %}
-                                    <p><strong>Исходные значения y:</strong></p>
-                                    <pre>{{ level.y }}</pre>
-                                    <p><strong>y в своей системе счисления:</strong></p>
-                                    <pre>{{ level.yk }}</pre>
+                                    <h5>Исходные значения y_k:</h5>
+                                    <pre>{{ level.y_k|join:", " }}</pre>
                                 {% else %}
-                                    <p><strong>Функции (номера):</strong></p>
-                                    <pre>{{ level.funcs }}</pre>
-                                    <p><strong>Индексы аргументов:</strong></p>
-                                    <pre>{{ level.args_ind }}</pre>
-                                    <p><strong>Результаты:</strong></p>
-                                    <pre>{{ level.results }}</pre>
+                                    <h5>Операции:</h5>
+                                    {% for row in level.display_rows %}
+                                        <div class="operation">
+                                            <strong>Побитовая операция:</strong>
+                                            <ul>
+                                                {% for a in row.args %}
+                                                    {{ a }}{% if not forloop.last %} ({{ row.func }}) {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                            <strong>Результат эталонной модели:</strong> {{ row.result }}<br>
+                                            <strong>Ответ из нашей модели:</strong> {{ row.model_result }}<br>
+                                            <em style="color: green;">Результаты совпадают с нашей моделью</em>
+                                        </div>
+                                    {% endfor %}
                                 {% endif %}
                             </div>
                         {% endfor %}
