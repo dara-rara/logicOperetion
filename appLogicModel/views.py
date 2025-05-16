@@ -1,10 +1,11 @@
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.utils import timezone
+from django.views.generic import TemplateView
 from requests import request
 from service.bitwise_funcs import func_symbols
 from service.forms import SessionForm
-from service.model_level import build_model
+from service.model_level import build_model, generate_random_numbers, generate_level
 from .models import Session
 from datetime import datetime
 import json
@@ -421,3 +422,15 @@ def next_run(request):
         request.session['levels_data'] = json.dumps(SessionStartView().prepare_levels_data(levels_data))
         request.session.modified = True
     return redirect('levels')  # Перенаправляем на страницу тестирования
+
+
+class ReferenceModelView(TemplateView):
+    template_name = "reference_model.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        levels_data = build_model()
+        context['levels'] = levels_data
+
+        return context
