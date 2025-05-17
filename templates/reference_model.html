@@ -133,11 +133,6 @@
                             <i class="fas fa-play me-1"></i> Новая сессия
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'reference_model' %}">
-                            Эталонная модель
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -149,29 +144,29 @@
             <div class="col-lg-8">
                 <div class="card card-custom mb-4">
                     <div class="card-header card-header-custom text-center">
-                        <h3>Эталонная модель</h3>
+                        <h3>Верификация</h3>
                     </div>
                     <div class="card-body">
                         {% for level in levels %}
                             <div class="level-block">
-                                <h4>Уровень {{ level.level }}</h4>
+                                <h4>Уровень {{ level.level_num }}</h4>
 
-                                {% if level.level == 0 %}
+                                {% if level.level_num == 0 %}
                                     <h5>Исходные значения y_k:</h5>
-                                    <pre>{{ level.y_k|join:", " }}</pre>
+                                    <ul>{{ level.y_k|join:", " }}</ul>
                                 {% else %}
                                     <h5>Операции:</h5>
-                                    {% for row in level.display_rows %}
+                                    {% for item in level.items %}
                                         <div class="operation">
-                                            <strong>Побитовая операция:</strong>
                                             <ul>
-                                                {% for a in row.args %}
-                                                    {{ a }}{% if not forloop.last %} ({{ row.func }}) {% endif %}
-                                                {% endfor %}
+                                                <strong>Аргументы(y_k):</strong>
+                                                <ul>{{ item.args }}</ul>
+                                                <strong>Побитовая операция:</strong>
+                                                <ul>{{ item.bits }}</ul>
+                                                <strong>Результат эталонной модели:</strong> {{ item.result }}_{{ item.base }}<br>
+                                                <strong>Ответ из нашей модели:</strong> {{ item.result }}_{{ item.base }}<br>
+                                                <em style="color: green;">Результаты совпадают с нашей моделью</em>
                                             </ul>
-                                            <strong>Результат эталонной модели:</strong> {{ row.result }}<br>
-                                            <strong>Ответ из нашей модели:</strong> {{ row.model_result }}<br>
-                                            <em style="color: green;">Результаты совпадают с нашей моделью</em>
                                         </div>
                                     {% endfor %}
                                 {% endif %}
