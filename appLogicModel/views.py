@@ -1,10 +1,11 @@
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.utils import timezone
+from django.views.generic import TemplateView
 from requests import request
 from service.bitwise_funcs import func_symbols
 from service.forms import SessionForm
-from service.model_level import build_model
+from service.model_level import build_model, generate_random_numbers, generate_level
 from .models import Session
 from datetime import datetime
 import json
@@ -58,6 +59,7 @@ class SessionStartView(View):
         for level in levels:
             level_data = {
                 'level': level['level'],
+                'y_k': [],
                 'l': level['l'],  # Добавляем количество элементов
                 'data': []
             }
@@ -69,6 +71,7 @@ class SessionStartView(View):
                         'y': yk,
                         'k': k
                     })
+                    level_data['y_k'].append(str(yk) + "_" + str(k))
             else:
                 # Для остальных уровней
                 for i in range(level['l']):
@@ -308,8 +311,9 @@ class LevelsView(View):
         for i, level in enumerate(levels_data):
             level_data = {
                 'level_num': level.get('level', 0),
-                'is_last': (i == last_level_index),
-                'items': []
+                'is_last': last_level_index,
+                'items': [],
+                'y_k': level.get('y_k', 0)
             }
 
             for item in level.get('data', []):
@@ -317,18 +321,16 @@ class LevelsView(View):
                     level_data['items'].append({
                         'type': 'input',
                         'y': item.get('y', ''),
-                        'k': item.get('k', ''),
-                        'yk': item.get('yk', '')
+                        'k': item.get('k', '')
                     })
                 else:
                     level_data['items'].append({
                         'type': 'operation',
                         'args': item.get('args', ''),
                         'bits': item.get('bits', ''),
-                        'result': item.get('result') if not level_data['is_last'] else None,
+                        'result': item.get('result'),
                         'base': item.get('base', '')
                     })
-
             levels.append(level_data)
         return levels
 
@@ -362,6 +364,20 @@ class ResultsView(View):
             return int((correct / total) * 100)
         except:
             return 0
+
+
+class ReferenceModelView(View):
+    def get(self, request):
+        try:
+            # Загрузка данных уровней из сессии
+            levels_data = json.loads(request.session.get('levels_data', '[]'))
+        except (json.JSONDecodeError, TypeError) as e:
+            messages.error(request, 'Ошибка загрузки данных уровней')
+            print(f"Error loading levels data: {str(e)}")
+            return redirect('session_start')
+        context = {'levels': LevelsView()._prepare_levels_data(levels_data)}
+        return render(request, 'reference_model.html', context)
+
 
 def download_session_report(request):
     if 'results' not in request.session:
@@ -421,3 +437,4 @@ def next_run(request):
         request.session['levels_data'] = json.dumps(SessionStartView().prepare_levels_data(levels_data))
         request.session.modified = True
     return redirect('levels')  # Перенаправляем на страницу тестирования
+

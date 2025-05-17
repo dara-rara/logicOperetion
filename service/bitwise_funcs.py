@@ -71,8 +71,7 @@ def bit_not(num, l: int = 3):
 
 def bit_equal(a, b):
     result = 0
-    m = max([a, b])
-    l = m.bit_length()
+    l = 3
     for i in range(l):
         mask = 1 << i
         bit_a = (a & mask) != 0

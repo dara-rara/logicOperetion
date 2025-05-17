@@ -242,8 +242,60 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingFive">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                                        <i class="fas fa-check-double me-2"></i>Процесс верификации
+                                    </button>
+                                </h2>
+                                <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#instructionsAccordion">
+                                    <div class="accordion-body">
+                                        <h5>Как работает верификация:</h5>
+                                        <ol>
+                                            <li>После ввода ответа система выполняет автоматическую проверку</li>
+                                            <li>Каждая операция на всех уровнях сравнивается с эталоном</li>
+                                            <li>После каждой операции отображается результат проверки</li>
+                                        </ol>
 
+                                        <h5 class="mt-3">Детали верификации:</h5>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Элемент</th>
+                                                        <th>Проверяется</th>
+                                                        <th>Формат</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Аргументы</td>
+                                                        <td>Корректность отображения в ЧС</td>
+                                                        <td>y_k значения</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Операция</td>
+                                                        <td>Правильность выполнения</td>
+                                                        <td>Битовое представление</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Результат</td>
+                                                        <td>Точное соответствие</td>
+                                                        <td>y_k значение</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="alert alert-info mt-3">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <strong>Важно:</strong> Верификация выполняется для всех уровней одновременно,
+                                            что позволяет увидеть, на каком именно этапе была допущена ошибка.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="text-center mt-4">
                             <a href="{% url 'session_start' %}" class="btn btn-primary-custom">
                                 <i class="fas fa-play me-2"></i>Начать работу

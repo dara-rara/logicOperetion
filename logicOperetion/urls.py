@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 
 from appLogicModel.views import IndexView, SessionStartView, LevelsView, ResultsView, InstructionsView, next_run, \
-    save_comment, download_session_report
+    save_comment, download_session_report, ReferenceModelView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +30,5 @@ urlpatterns = [
     path('next_run/', next_run, name='next_run'),
     path('save_comment/', save_comment, name='save_comment'),
     path('download_report/', download_session_report, name='download_report'),
+    path('reference-model/', ReferenceModelView.as_view(), name='reference_model'),
 ]

@@ -138,7 +138,7 @@
                        data-bs-toggle="tab"
                        href="#level-{{ level.level_num }}">
                         Уровень {{ level.level_num }}
-                        {% if level.is_last %}(Финальный){% endif %}
+                        {% if level.is_last == level.level_num%}(Финальный){% endif %}
                     </a>
                 </li>
                 {% endfor %}
@@ -176,7 +176,7 @@
                                                 <td class="text-center operation-cell">{{ item.bits }}</td>
                                                <td class="text-center answer-cell"
                                                     id="answer-{{ level.level_num }}-{{ forloop.counter0 }}">
-                                                    {% if item.result is not None %}
+                                                    {% if level.is_last != level.level_num %}
                                                         {{ item.result }}
                                                     {% else %}
                                                         <span class="text-muted">???</span>
