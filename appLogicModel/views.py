@@ -407,6 +407,77 @@ def download_session_report(request):
     response['Content-Disposition'] = 'attachment; filename="model_test_report.txt"'
     return response
 
+
+def download_protocol(request):
+    if 'results' not in request.session:
+        return HttpResponse("Нет данных сессии", status=404)
+
+    try:
+        levels_data = json.loads(request.session.get('levels_data', '[]'))
+    except (json.JSONDecodeError, TypeError) as e:
+        messages.error(request, 'Ошибка загрузки данных уровней')
+        print(f"Error loading levels data: {str(e)}")
+
+    context = {'levels': LevelsView()._prepare_levels_data(levels_data)}
+
+    # Формируем структуру протокола
+    report_lines = [
+        "ПРОТОКОЛ МОДЕЛИ",
+        "=" * 50,
+        ""
+    ]
+
+    for level in context['levels']:
+        report_lines.append(f"УРОВЕНЬ {level['level_num']}")
+        report_lines.append("-" * 140)
+
+        if level['level_num'] == 0:
+            # Заголовки таблицы для уровня 0
+            headers = ["Значение y", "Основание k"]
+            col_widths = [20, 20]
+
+            # Формируем строку заголовков
+            header_line = "|".join(h.center(w) for h, w in zip(headers, col_widths))
+            report_lines.append(header_line)
+            report_lines.append("-" * sum(col_widths) + "-" * (len(col_widths) - 1))
+
+            # Добавляем данные
+            for item in level['items']:
+                row = "|".join([
+                    str(item.get('y', '')).center(col_widths[0]),
+                    str(item.get('k', '')).center(col_widths[1])
+                ])
+                report_lines.append(row)
+        else:
+            # Заголовки таблицы для других уровней
+            headers = ["Аргументы y_k", "Побитовая операция", "Значения y", "Основание k"]
+            col_widths = [55, 55, 15, 15]
+
+            # Формируем строку заголовков
+            header_line = "|".join(h.center(w) for h, w in zip(headers, col_widths))
+            report_lines.append(header_line)
+            report_lines.append("-" * sum(col_widths) + "-" * (len(col_widths) - 1))
+
+            # Добавляем данные
+            for item in level['items']:
+                y_value = str(item.get('result', ''))
+                row = "|".join([
+                    str(item.get('args', '')).center(col_widths[0]),
+                    str(item.get('bits', '')).center(col_widths[1]),
+                    y_value.center(col_widths[2]),
+                    str(item.get('base', '')).center(col_widths[3])
+                ])
+                report_lines.append(row)
+
+        report_lines.append("\n" + "=" * 140 + "\n")
+
+    # Создаём TXT-файл
+    response = HttpResponse("\n".join(report_lines),
+                            content_type='text/plain; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="model_protocol.txt"'
+    return response
+
+
 def save_comment(request):
     if request.method == 'POST' and 'results' in request.session:
         request.session['results']['user_comment'] = request.POST.get('user_comment', '')
