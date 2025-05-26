@@ -1,0 +1,19 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="str.Split" />
+          <option value="builtins.input.isdigit" />
+          <option value="list.capitalize" />
+          <option value="list.replace" />
+          <option value="main.functions_to_profile" />
+          <option value="main.*" />
+          <option value="helloworld.helloworld.urls.hwApp" />
+          <option value="computerArifmetic.urls.*" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
